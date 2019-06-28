@@ -1,19 +1,24 @@
 ﻿using System.Collections.Generic;
+using Backend.Interfaces;
+using Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
     [ApiController]
-    public class ClientsController : ControllerBase
+    public class ProductsController : ControllerBase
     {
-        [Authorize]
-        [HttpGet("api/users")]
-        public ActionResult<IEnumerable<string>> Get()
+        private readonly IProductsService service;
+
+        public ProductsController(IProductsService service)
         {
-            return new string[] { "value1", "value2" };
+            this.service = service;
         }
 
-
+        [Authorize(Roles = "Admin")]
+        [HttpGet("api/products")]
+        public IEnumerable<Product> Products()
+            => service.Products();
     }
 }
